@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# obsidian writing workspace (templates, vault config, scratch)
+/content/posts/template/
+/content/posts/.obsidian/
+/content/posts/.scratch/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
