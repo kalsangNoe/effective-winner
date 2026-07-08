@@ -23,7 +23,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     <>
       {/* Column 2: the blog post itself */}
       <main className="typo-article min-w-0 flex-1 overflow-y-auto">
-        <article className="mx-auto max-w-2xl px-8 py-16">
+        <article className="mx-auto max-w-2xl px-5 py-10 sm:px-8 sm:py-16">
           <header className="mb-10">
             <p className="typo-date mb-2 text-sm text-zinc-400 dark:text-zinc-500">{post.date}</p>
             <h1 className="typo-title text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">

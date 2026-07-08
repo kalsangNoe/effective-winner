@@ -1,13 +1,17 @@
 import { getPosts } from "@/lib/posts";
 import { PostList } from "@/app/components/post-list";
+import { MobileNav } from "@/app/components/mobile-nav";
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   const posts = getPosts().map(({ slug, title, date }) => ({ slug, title, date }));
 
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-dvh flex-col md:flex-row">
+      {/* On phones the post list lives in a top-bar menu instead of a column */}
+      <MobileNav posts={posts} />
+
       {/* Column 1: list of all posts (shared across every post) */}
-      <aside className="typo-list sticky top-0 h-dvh w-64 shrink-0 overflow-y-auto pt-8">
+      <aside className="typo-list sticky top-0 hidden h-dvh w-64 shrink-0 overflow-y-auto pt-8 md:block">
         <PostList posts={posts} />
       </aside>
 

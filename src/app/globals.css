@@ -48,6 +48,7 @@ body {
   color: #3f3f46; /* zinc-700 */
   font-size: 1.125rem;
   line-height: 1.8;
+  overflow-wrap: break-word; /* long words/URLs must not widen the column */
 }
 .prose > * + * {
   margin-top: 1.25rem;
@@ -203,6 +204,23 @@ body {
 }
 .typo-article .prose table {
   font-size: calc(1rem * var(--typo-article-scale, 1));
+}
+
+/* ---- Mobile adjustments ------------------------------------------------------
+   The .typo-* font-size rules above beat Tailwind utilities, so responsive
+   sizing for the article header lives here rather than in the JSX. */
+@media (max-width: 640px) {
+  .typo-article .typo-title {
+    font-size: calc(1.875rem * var(--typo-article-scale, 1));
+  }
+  .typo-article .typo-desc {
+    font-size: calc(1rem * var(--typo-article-scale, 1));
+  }
+  /* Wide tables scroll within the column instead of stretching the page. */
+  .prose table {
+    display: block;
+    overflow-x: auto;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
