@@ -34,9 +34,18 @@ Routing: `/` → redirect to `/blog` → redirect to the newest post, i.e. `getP
 
 The post body is rendered with `dangerouslySetInnerHTML` from `marked`'s output — **posts are trusted, author-controlled content, not user input**, and there is no HTML sanitization step. Do not feed untrusted markdown through this path without adding one.
 
-### Adding a post
+### Authoring workflow
 
-Drop a new `.md` file into `content/posts/` with `title`, `date`, and `description` frontmatter. The filename becomes the slug, `##`/`###` headings flow into the outline, and the route is statically generated automatically (`generateStaticParams`). No other files need to change.
+`content/posts/` doubles as an **Obsidian vault** — the author writes posts there directly. Obsidian's own files inside it (`template/`, `.obsidian/`, `.scratch/`) are **gitignored** and must stay that way; they are not blog content. `getPostSlugs()` only reads top-level `*.md` files (not subfolders), so `template/` is safe from being published even though it lives under `content/posts/`.
+
+**Adding a post:** drop a new `.md` file into `content/posts/` with `title`, `date`, and `description` frontmatter. The filename becomes the slug, `##`/`###` headings flow into the outline, and the route is statically generated automatically (`generateStaticParams`). No other files need to change.
+
+- **Frontmatter must start on line 1** — byte 0 must be the opening `---`. A leading blank line (an easy mistake when inserting an Obsidian template) makes `gray-matter` *and* Obsidian treat the block as body text: the `---`s render as horizontal rules and `title:`/`date:` show up as a paragraph. If a post renders its own frontmatter, this is why.
+- **Filename = slug = URL**, so name files `kebab-case.md` (no spaces — spaces become `%20` in the URL). The human-readable headline lives in the `title` frontmatter, independent of the filename.
+
+**Removing a post:** delete its `.md` file and commit. Deletions are staged by `git add content/posts`. Keep at least one post — `/` and `/blog` redirect to the newest post, so an empty `content/posts/` breaks those routes.
+
+**Publishing:** the author runs the `blogpush` zsh function (in `~/.zshrc`): `git -C /Users/kal/blog add content/posts && git commit -m "${1:-Update posts}" && git push`. It stages only `content/posts` (so ignored Obsidian files never sneak in) and takes an optional commit message.
 
 ## Conventions
 

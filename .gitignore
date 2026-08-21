@@ -24,10 +24,12 @@
 .DS_Store
 *.pem
 
-# obsidian writing workspace (templates, vault config, scratch)
+# obsidian writing workspace (templates, vault config, scratch, private notes)
 /content/posts/template/
 /content/posts/.obsidian/
 /content/posts/.scratch/
+/content/posts/Journal/
+/content/posts/other/
 
 # debug
 npm-debug.log*
