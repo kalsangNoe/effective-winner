@@ -47,7 +47,7 @@ export function Outline({ headings }: { headings: Heading[] }) {
       <h2 className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
         On this page
       </h2>
-      <ul className="flex flex-col gap-0.5">
+      <ul className="flex flex-col gap-1.5">
         {headings.map((heading) => {
           const active = heading.id === activeId;
           return (

@@ -13,7 +13,7 @@ export function PostList({ posts }: { posts: PostLink[] }) {
       <h2 className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
         All posts
       </h2>
-      <ul className="flex flex-col gap-0.5">
+      <ul className="flex flex-col gap-1.5">
         {posts.map((post) => {
           const href = `/blog/${post.slug}`;
           const active = pathname === href;

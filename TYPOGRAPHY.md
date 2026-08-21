@@ -23,9 +23,9 @@ letter-spacing. The applied values live in the `:root` block of `globals.css`:
 
 | Column (class) | Font | Size (`scale`) | Line height (`leading`) | Letter spacing (`tracking`) |
 | --- | --- | --- | --- | --- |
-| Post list (`.typo-list`) | Arial | ×1.0 | ×0.8 | −0.025em |
+| Post list (`.typo-list`) | Arial | ×0.85 | ×0.9 | −0.025em |
 | Article (`.typo-article`) | Helvetica | ×0.8 | ×0.95 | −0.03em |
-| Outline (`.typo-outline`) | Arial | ×1.0 | ×0.8 | −0.025em |
+| Outline (`.typo-outline`) | Arial | ×0.85 | ×0.9 | −0.025em |
 
 Effective sizes after the multiplier (base × scale):
 
@@ -37,8 +37,8 @@ Effective sizes after the multiplier (base × scale):
 | `.prose` body | 1.125rem | `×0.8` → 0.9rem; leading 1.8 `×0.95` → 1.71 |
 | `.prose h2` / `h3` | 1.5rem / 1.25rem | → 1.2rem / 1rem |
 | `.prose pre` / `table` | 0.9rem / 1rem | → 0.72rem / 0.8rem |
-| Sidebar nav link | 0.875rem | `×1.0` → 0.875rem; leading 1.25rem `×0.8` → 1rem |
-| Sidebar heading | 0.75rem | `×1.0` → 0.75rem (keeps `tracking-wider`) |
+| Sidebar nav link | 0.875rem | `×0.85` → 0.74rem; leading 1.25rem `×0.9` → 1.125rem |
+| Sidebar heading | 0.75rem | `×0.85` → 0.64rem (keeps `tracking-wider`) |
 
 Fallbacks in the `.typo-*` rules equal the base values, so clearing a variable
 restores the base design for that column. Element-specific rules that are more
@@ -135,7 +135,7 @@ dormant) `TypographySettings` popover; see CLAUDE.md → **Per-column typography
 | --- | --- | --- |
 | `<nav>` wrapper | `p-4` (1rem) | — |
 | Section heading | `px-3 pb-2` | — |
-| List (`<ul>`) | — | `gap-0.5` (0.125rem between items) |
+| List (`<ul>`) | — | `gap-1.5` (0.375rem between items) |
 | Nav link (l1) | `px-3 py-1` (0.75rem / 0.25rem) | — |
 | Outline `<h3>` link | `pl-6 pr-3` (indented) | — |
 | Nav link radius | `rounded-md` (0.375rem) | — |

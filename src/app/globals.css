@@ -7,8 +7,8 @@
   /* Applied per-column typography (was tuned in the settings popover, now the
      baked-in defaults; see TYPOGRAPHY.md and the `.typo-*` rules below). */
   --typo-list-font: "Arial", sans-serif;
-  --typo-list-scale: 1;
-  --typo-list-leading: 0.8;
+  --typo-list-scale: 0.85;
+  --typo-list-leading: 0.9;
   --typo-list-tracking: -0.025em;
 
   --typo-article-font: "Helvetica", sans-serif;
@@ -17,8 +17,8 @@
   --typo-article-tracking: -0.03em;
 
   --typo-outline-font: "Arial", sans-serif;
-  --typo-outline-scale: 1;
-  --typo-outline-leading: 0.8;
+  --typo-outline-scale: 0.85;
+  --typo-outline-leading: 0.9;
   --typo-outline-tracking: -0.025em;
 }
 
