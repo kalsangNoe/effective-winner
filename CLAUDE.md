@@ -30,6 +30,22 @@ Posts are **markdown files in `content/posts/`** (one file per post; the filenam
 
 The link between column 2 and column 3 is `slugify()` in `src/lib/posts.ts`: when rendering the body, `renderMarkdown()` injects `id="slugify(headingText)"` onto each `<h2>/<h3>`, and `extractHeadings()` builds the outline with the same `slugify`, so `Outline` links to `#slugify(headingText)`. **Both sides must use the same `slugify`** or in-page jumping breaks. `Outline` adds smooth-scroll + IntersectionObserver scroll-spy on top, but plain anchor jumping works without JS because the ids and hrefs already match.
 
+Search lives in `src/lib/search.ts` and runs entirely in the browser: `PostList` already receives every post's metadata for the sidebar, so searching needs no index file, no dependency and no request. `buildIndex()` precomputes each post's lowercased haystack (title + description + date) and a set of word stems once per corpus; `parseQuery()` turns the raw input into AND-ed groups of OR-ed terms; `searchPosts()` scores and ranks. Two rules shape the matching:
+
+- **Terms match on their stem as well as literally**, so `story`, `stories` and `Storytelling` all find each other. `stemWord()` is a deliberately small suffix stemmer (plurals, `-ing`/`-ed`/`-ly`, silent `e`) — a fuller one produces matches a reader cannot explain. The stem is only used as a substring needle when it is ≥4 chars, which keeps short words from over-matching.
+- **Bare words narrow, quoted things broaden.** Space-separated words are AND-ed (`steve jobs`); adjacent quoted terms, and anything joined by `,`, `|` or `OR`, are alternatives (`"stories" "story"`); a leading `-` excludes. The syntax is surfaced to readers in the search field's no-results state — if you change the grammar, change that hint too.
+
+`highlight()` splits a title into matched/unmatched runs so results can show why they matched; it must stay in sync with the same needle rules `scoreTerm()` uses, or titles will highlight differently from how they were selected.
+
+**Listen to this article** (`src/app/components/listen-button.tsx`, helpers in `src/lib/tts.ts`) reads the post aloud with the browser's built-in `speechSynthesis`. That choice is deliberate: a cloud voice would mean an API key, a server route and a per-play cost, and this blog is a fully static export with no runtime of its own. The trade-off is that voice quality is whatever the reader's OS provides.
+
+- **Speech is chunked into sentences, not sent as one blob.** Chrome silently truncates an utterance after ~15 seconds, and per-sentence utterances are what let the player track progress and highlight the block being read. `splitSentences()` keeps initials and abbreviations intact ("Howard S. Becker" is one sentence) and splits anything still over ~220 chars at clause boundaries.
+- **A cancelled utterance still fires `onend`.** Every playback run carries a session token; `onend` returns early when the token is stale. Without it, `cancel()` would queue the next chunk and two readers would talk over each other.
+- The player is mounted with `key={post.slug}`, so navigating to another post remounts it: state resets and the unmount cleanup stops the speech. Speech lives on the browser, not in React, so it will happily keep reading a page that is gone.
+- `speak()` must be called synchronously inside the click handler or iOS ignores it — don't await voices before starting.
+- The reading-time estimate is computed at build time from the post HTML (`htmlToText` + `estimateMinutes`), not by measuring the DOM, so the idle button can show it without parsing anything for visitors who never press play.
+- The spoken block is tinted via `.typo-article .tts-reading` in `globals.css`, padded with a `box-shadow` spread rather than real padding so the article never reflows as the highlight moves. The rule is scoped to the column, not `.prose`, because the `<h1>` is read first and lives outside `.prose`.
+
 Routing: `/` → redirect to `/blog` → redirect to the newest post, i.e. `getPosts()[0]` (`src/app/page.tsx`, `src/app/blog/page.tsx`). There is no standalone blog index; readers always land on a post so all three columns are populated.
 
 The post body is rendered with `dangerouslySetInnerHTML` from `marked`'s output — **posts are trusted, author-controlled content, not user input**, and there is no HTML sanitization step. Do not feed untrusted markdown through this path without adding one.

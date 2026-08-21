@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPost, getPosts } from "@/lib/posts";
+import { estimateMinutes, htmlToText } from "@/lib/tts";
 import { Outline } from "@/app/components/outline";
+import { ListenButton } from "@/app/components/listen-button";
 
 export function generateStaticParams() {
   return getPosts().map((post) => ({ slug: post.slug }));
@@ -32,6 +34,17 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             <p className="typo-desc mt-3 text-lg text-zinc-500 dark:text-zinc-400">
               {post.description}
             </p>
+            {/* Reads the rendered article aloud. Client-only, and it renders
+                nothing at all where the browser has no speech synthesis. */}
+            <div className="mt-6">
+              {/* Keyed by slug so navigating to another post remounts the
+                  player: state resets and its cleanup stops the speech. */}
+              <ListenButton
+                key={post.slug}
+                title={post.title}
+                minutes={estimateMinutes(htmlToText(post.html))}
+              />
+            </div>
           </header>
 
           {/* Rendered from markdown; styled by the `.prose` rules in globals.css. */}

@@ -138,6 +138,26 @@ body {
   text-align: left;
 }
 
+/* The block currently being read aloud (see ListenButton). The box-shadow pads
+   the tint out to the text's edges without adding padding, which would reflow
+   the article every time the highlight moves. */
+.typo-article .tts-reading {
+  background: #f4f4f5; /* zinc-100 */
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 0.375rem #f4f4f5;
+}
+@media (prefers-color-scheme: dark) {
+  .typo-article .tts-reading {
+    background: #27272a; /* zinc-800 */
+    box-shadow: 0 0 0 0.375rem #27272a;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .typo-article .tts-reading {
+    transition: none;
+  }
+}
+
 /* ---- Per-column typography settings (driven by the settings popover) --------
    The popover writes `--typo-<col>-<prop>` custom properties onto :root, where
    <col> is `list` | `article` | `outline`. Each rule below reads them with the
