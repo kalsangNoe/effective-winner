@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { PostList, type PostLink } from "@/app/components/post-list";
+import { PostList } from "@/app/components/post-list";
+import type { PostLink } from "@/lib/search";
 
 /** Which entry point opened the panel: the post list, or search (field focused). */
 type Panel = null | "list" | "search";

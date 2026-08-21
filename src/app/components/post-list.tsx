@@ -3,22 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
-export type PostLink = { slug: string; title: string; date: string; description?: string };
-
-/**
- * Case-insensitive match: every whitespace-separated term must appear somewhere
- * in the post's title, description or date. Searching by date works because the
- * date string is part of the haystack ("2026-08" narrows to a month).
- */
-export function filterPosts(posts: PostLink[], query: string): PostLink[] {
-  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  if (terms.length === 0) return posts;
-  return posts.filter((post) => {
-    const haystack = `${post.title} ${post.description ?? ""} ${post.date}`.toLowerCase();
-    return terms.every((term) => haystack.includes(term));
-  });
-}
+import { buildIndex, highlight, parseQuery, searchPosts, type PostLink } from "@/lib/search";
 
 export function PostList({
   posts,
@@ -39,7 +24,10 @@ export function PostList({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
-  const results = useMemo(() => filterPosts(posts, query), [posts, query]);
+  // Indexing is per-corpus, so it happens once; a keystroke only re-runs the match.
+  const index = useMemo(() => buildIndex(posts), [posts]);
+  const parsed = useMemo(() => parseQuery(query), [query]);
+  const results = useMemo(() => searchPosts(index, parsed), [index, parsed]);
 
   // Keep the keyboard-highlighted result visible in the scrolling column.
   useEffect(() => {
@@ -188,7 +176,18 @@ export function PostList({
                     : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                 } ${highlighted ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white" : ""}`}
               >
-                {post.title}
+                {highlight(post.title, parsed.terms).map((segment, position) =>
+                  segment.match ? (
+                    <mark
+                      key={position}
+                      className="bg-transparent font-medium text-zinc-900 dark:text-white"
+                    >
+                      {segment.text}
+                    </mark>
+                  ) : (
+                    <span key={position}>{segment.text}</span>
+                  ),
+                )}
               </Link>
             </li>
           );
@@ -196,11 +195,31 @@ export function PostList({
       </ul>
 
       {searching && results.length === 0 && (
-        <p className="px-3 py-1 text-sm text-zinc-400 dark:text-zinc-500">
-          No posts match &ldquo;{query}&rdquo;.
-        </p>
+        <div className="px-3 py-1 text-sm text-zinc-400 dark:text-zinc-500">
+          <p>No posts match &ldquo;{query}&rdquo;.</p>
+          {/* Plain divs, not a list: the <nav> landmark holds post links only. */}
+          <div className="mt-3 flex flex-col gap-1.5 text-xs">
+            <p>
+              <Syntax>writing story</Syntax> both words
+            </p>
+            <p>
+              <Syntax>&ldquo;stories&rdquo; &ldquo;story&rdquo;</Syntax> either one
+            </p>
+            <p>
+              <Syntax>-interview</Syntax> exclude
+            </p>
+          </div>
+        </div>
       )}
     </nav>
+  );
+}
+
+function Syntax({ children }: { children: React.ReactNode }) {
+  return (
+    <code className="mr-1.5 font-[family-name:var(--font-mono,ui-monospace)] text-zinc-500 dark:text-zinc-400">
+      {children}
+    </code>
   );
 }
 
