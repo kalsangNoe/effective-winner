@@ -40,7 +40,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
       </main>
 
       {/* Column 3: outline of this post's headings */}
-      <aside className="typo-outline sticky top-0 hidden h-dvh w-64 shrink-0 overflow-y-auto pt-8 lg:block">
+      <aside className="typo-outline sticky top-0 hidden h-dvh w-64 shrink-0 overflow-y-auto lg:block">
         <Outline headings={post.headings} />
       </aside>
     </>

@@ -43,10 +43,14 @@ export function Outline({ headings }: { headings: Heading[] }) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="p-4">
-      <h2 className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-        On this page
-      </h2>
+    <nav className="p-4 md:pt-12">
+      {/* Same sticky row (and height) as column 1's heading + search control,
+          so both sidebars' lists start at the same vertical position. */}
+      <div className="sticky top-0 z-10 flex h-8 items-center bg-background px-3 pb-2">
+        <h2 className="flex-1 truncate text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+          On this page
+        </h2>
+      </div>
       <ul className="flex flex-col gap-1.5">
         {headings.map((heading) => {
           const active = heading.id === activeId;

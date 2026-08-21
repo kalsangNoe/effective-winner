@@ -164,10 +164,10 @@ body {
 }
 
 /* Sidebars (columns 1 & 3): heading + nav links. */
-.typo-list nav > h2 {
+.typo-list nav h2 {
   font-size: calc(0.75rem * var(--typo-list-scale, 1));
 }
-.typo-outline nav > h2 {
+.typo-outline nav h2 {
   font-size: calc(0.75rem * var(--typo-outline-scale, 1));
 }
 .typo-list a {
@@ -177,6 +177,17 @@ body {
 .typo-outline a {
   font-size: calc(0.875rem * var(--typo-outline-scale, 1));
   line-height: calc(1.25rem * var(--typo-outline-leading, 1));
+}
+
+/* Column-1 search field. It tracks the list's typography on desktop, but stays
+   at 16px on phones: iOS Safari zooms the page when a focused input is smaller. */
+.typo-list input {
+  font-size: 1rem;
+}
+@media (min-width: 768px) {
+  .typo-list input {
+    font-size: calc(0.875rem * var(--typo-list-scale, 1));
+  }
 }
 
 /* Article (column 2): header + rendered `.prose` body. */
